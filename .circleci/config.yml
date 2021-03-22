@@ -7,15 +7,7 @@ jobs:
 
     steps:
       - checkout
-      - run: gradle dependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
-
-      - run:
-          name: Build project
-          command: ./gradlew build -x lab1
+      - run: ./mvnw -Dmaven.test.skip=true package
 
 workflows:
   version: 2
