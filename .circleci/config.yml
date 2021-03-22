@@ -4,24 +4,14 @@ jobs:
   build:
     docker:
       - image: circleci/openjdk:8-jdk
-    environment:
-      MAVEN_OPTS: -Xmx3200m
-    
+
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            - v1-dependencies-
-      - run: gradle dependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
-
-      - run:
-          name: Build project
-          command: ./gradlew build 
+          - gradle-{{ checksum "build.gradle" }}
+      - run: gradle assemble
+      - run: gradle run 
 
 workflows:
   version: 2
