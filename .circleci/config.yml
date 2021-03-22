@@ -2,25 +2,34 @@ version: 2.1
 
 jobs:
   build:
-    working_directory: ~/lab1
+    working_directory: ~/CircleCI
     docker:
-      - image: circleci/openjdk:8-jdk
-    environment:
-      JVM_OPTS: -Xmx3200m
+      -
+        image: 'circleci/openjdk:8-jdk-stretch'
     steps:
       - checkout
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-         name: Chmod permissions  
-         command: sudo chmod +x ./gradlew
-      - run:
-          name: Download Dependencies
-          command: ./gradlew androidDependencies
-      - save_cache:
+      -
+        restore_cache:
+          key: 'CircleCI-{{ checksum "pom.xml" }}'
+      -
+        run: 'mvn dependency:go-offline'
+      -
+        save_cache:
           paths:
-            - ~/.gradle
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+            - ~/.m2
+          key: 'CircleCI-{{ checksum "pom.xml" }}'
+      -
+        run:
+          name: 'Download BrowserStack Local binary and start it.'
+          command: "wget \"https://www.browserstack.com/browserstack-local/BrowserStackLocal-linux-x64.zip\"\nunzip BrowserStackLocal-linux-x64.zip\n./BrowserStackLocal P4JKysg5WuchQxBfKQu1 --daemon start\n"
+      -
+        run: 'mvn test -P local'
+      -
+        store_test_results:
+          path: target/surefire-reports
+      -
+        store_artifacts:
+          path: target/demo-java-spring-0.0.1-SNAPSHOT.jar
 
 workflows:
   version: 2
