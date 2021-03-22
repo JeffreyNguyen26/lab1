@@ -7,6 +7,14 @@ jobs:
 
     steps:
       - checkout     
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.xml" }}
       - run: mvn dependency:go-offline
       - run: mvn package
 
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build
