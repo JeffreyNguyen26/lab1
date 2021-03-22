@@ -51,7 +51,7 @@ public class ValidDate implements Serializable {
 
         err = "";
         //Debug since 26/10/2018
-//        try {
+        try {
             int dayConvert = Integer.parseInt(day);
 
             if (dayConvert >= 1) {
@@ -72,14 +72,14 @@ public class ValidDate implements Serializable {
                 this.listErr.add(new DayMonthYearErr(err));
 
             }
-//        } catch (NumberFormatException e) {
-//            if (this.listErr == null) {
-//                this.listErr = new ArrayList<>();
-//            }
-//            err = "Input data for Day is incorrect format!";
-//            this.listErr.add(new DayMonthYearErr(err));
-//
-//        }
+        } catch (NumberFormatException e) {
+            if (this.listErr == null) {
+                this.listErr = new ArrayList<>();
+            }
+            err = "Input data for Day is incorrect format!";
+            this.listErr.add(new DayMonthYearErr(err));
+
+        }
 
     }
 
